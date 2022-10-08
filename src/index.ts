@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'koa';
 import { StrategyCreatedStatic } from 'passport';
 import { generateToken, decodeToken } from './token';
 
@@ -52,9 +52,11 @@ class MagicLoginStrategy {
   }
 
   send = (req: Request, res: Response): void => {
+    // @ts-ignore
     const payload = req.method === 'GET' ? req.query : req.body;
     if (!payload.destination) {
-      res.status(400).send('Please specify the destination.');
+      res.status = 400;
+      res.message = 'Please specify the destination.';
       return;
     }
 
@@ -72,11 +74,11 @@ class MagicLoginStrategy {
         req
       )
       .then(() => {
-        res.json({ success: true, code });
+        res.body = { success: true, code };
       })
       .catch((error: any) => {
         console.error(error);
-        res.json({ success: false, error });
+        res.body = { success: false, error };
       });
   };
 
